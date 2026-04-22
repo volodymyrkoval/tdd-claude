@@ -1,0 +1,91 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(.claude/*)",
+      "Write(.claude/*)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/intent-classifier.sh"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/plan-progress.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "TaskCreate|TaskUpdate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/plan-as-todo.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/no-git-add-all.sh"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-commit-green.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-guard.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    }
+  },
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true,
+  "preferredNotifChannel": "terminal_bell",
+  "allowedTools": [
+    "Edit",
+    "Write",
+    "Read",
+    "Glob",
+    "Grep",
+    "Bash"
+  ],
+  "feedbackSurveyState": {
+    "lastShownTime": 1754003104308
+  },
+  "model": "sonnet"
+}

@@ -1,0 +1,38 @@
+# ==============================================================================
+# ~/.claude — gitignore
+#
+# Strategy: ignore everything by default, then explicitly allow the public
+# surface (docs, the four pillars, settings). Anything Claude Code generates
+# at runtime — caches, sessions, history, telemetry, projects/, etc. — is
+# excluded automatically with no per-file rules to maintain.
+# ==============================================================================
+
+# Ignore everything by default
+*
+
+# --- Top-level public docs & config ---
+!.gitignore
+!README.md
+!CLAUDE.md
+!QUALITY_TOOLING.md
+!settings.json
+
+# --- The four pillars ---
+!agents/
+!agents/**
+
+!commands/
+!commands/**
+
+!hooks/
+!hooks/**
+
+!skills/
+!skills/**
+
+# Re-exclude private/internal skill subtrees.
+# Must use the /** suffix because !skills/** un-ignored every child;
+# a bare directory pattern would only re-exclude the dir entry, not its contents.
+# (.gitignore does not support inline comments — keep these on their own lines.)
+skills/notebooklm/**
+skills/*-workspace/**
