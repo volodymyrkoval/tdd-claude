@@ -11,7 +11,7 @@ Finalise the current iteration: archive the plan, squash all impl commits into o
 ## Context
 
 - Branch: !`git branch --show-current`
-- Base branch: !`git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|.*/||' || echo "main"`
+- Base branch: !`git for-each-ref --format='%(refname:lstrip=3)' refs/remotes/origin/HEAD 2>/dev/null || echo "main"`
 - Status: !`git status --short`
 - Active plan: !`find docs/plans -name "*.md" ! -name "_*" 2>/dev/null | sort | tail -1 || echo "none"`
 
