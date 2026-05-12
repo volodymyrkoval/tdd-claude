@@ -113,9 +113,19 @@ Configure based on project's language/runtime:
 - **Mutation testing:** Stryker (TS/JS) or mutmut (Python) — see `QUALITY_TOOLING.md`
 - **Architecture fitness:** dependency-cruiser (TS/JS) or import-linter (Python) — see `QUALITY_TOOLING.md`
 
-## Context7 MCP
+## Context7 MCP (mandatory)
 
-Use Context7 (`resolve-library-id` → `get-library-docs`) when looking up setup steps, config options, or version-specific defaults for any framework or tool being scaffolded. Always prefer Context7 docs over training-data recall for install commands, config file schemas, and plugin names — these change between versions.
+**Before writing any config file or install command**, resolve every framework and tool via Context7:
+
+1. Call `mcp__plugin_context7_context7__resolve-library-id` with the library name.
+2. Call `mcp__plugin_context7_context7__query-docs` with the resolved ID to fetch current setup/config docs.
+3. Use the returned docs — not training-data recall — for install commands, config schemas, plugin names, and version-specific defaults.
+
+**Required lookups (greenfield):** test runner, linter/formatter, any named framework (Next.js, FastAPI, Express, etc.), Stryker (if TS/JS), mutmut (if Python), dependency-cruiser (if TS/JS), import-linter (if Python).
+
+**Required lookups (retrofit):** any tool from `QUALITY_TOOLING.md` being installed or configured.
+
+Do not skip this step. Training data drifts; Context7 reflects what actually works today.
 
 ## Output Format
 

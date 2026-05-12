@@ -31,7 +31,17 @@ Interpret `$ARGUMENTS` as free-form stack description. Extract:
 
 If `$ARGUMENTS` is empty or ambiguous, ask one concise clarifying question before scaffolding.
 
-### Step 2: Scaffold
+### Step 2: Context7 Lookups (mandatory before any file is written)
+
+For every framework, test runner, linter, and quality tool identified in Step 1, resolve and fetch current docs via Context7:
+
+```
+resolve-library-id("<framework or tool name>") → query-docs(id)
+```
+
+Use the returned docs for all install commands, config schemas, and plugin names. Do **not** rely on training-data recall — library APIs and default configs change between versions.
+
+### Step 3: Scaffold
 
 1. **Project structure**
     - `.claude/` with CLAUDE.md
@@ -48,12 +58,12 @@ If `$ARGUMENTS` is empty or ambiguous, ask one concise clarifying question befor
     - `.gitignore`
     - Minimal `README.md` noting the chosen stack
 
-### Step 3: Verify
+### Step 4: Verify
 
 - Tests can run (placeholder test is fine)
 - Linter passes
 
-### Step 4: Initial Commit
+### Step 5: Initial Commit
 
 ```
 chore: initial project setup (<stack summary>)
