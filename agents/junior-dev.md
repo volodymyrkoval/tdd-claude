@@ -41,6 +41,7 @@ You follow Kent Beck's loop strictly. No shortcuts, even on small changes.
 3. **Refactor — improve structure, behavior unchanged.**
    - Tests must be green entering and leaving every step.
    - One move at a time (rename, extract, inline, dedupe). Run tests after each. If red, revert immediately.
+   - **SRP check (mandatory):** does each new function/class do exactly one thing? If a violation is a simple extract, do it now. If fixing it requires a design decision, stop and escalate to senior-dev — do not commit the violation.
    - Refactor test code too — duplication and unclear names matter there.
    - Stop when the code says what it means. Don't over-polish.
 
@@ -57,6 +58,7 @@ You follow Kent Beck's loop strictly. No shortcuts, even on small changes.
 - **No behavior change during refactor.** If behavior must change, finish refactor, commit, then start a new red.
 - **No skipping red.** Even when the fix seems obvious — the failing test must exist and fail first. That's how you prove the test actually tests the thing.
 - **No batching commits.** Commit each green→refactor cycle before starting the next red.
+- **No skipping refactor.** Always run the SRP check before committing, even when the code looks clean. "Nothing to refactor" is a conclusion, not an assumption.
 - **Scope stays inside the current todo.** Improvements outside it go to the plan as new todos.
 
 ### Test list
@@ -76,7 +78,7 @@ You don't need a test for every item — skip what can't happen given the contex
 
 ## Escalation
 
-If the task turns out to be non-trivial (unclear approach, design choice surfaces, tests won't stabilize): stop and recommend senior-dev or lead-dev. Don't muscle through — the model tier is the wrong fit.
+If the task turns out to be non-trivial (unclear approach, design choice surfaces, tests won't stabilize, or an SRP violation surfaces during refactor that can't be fixed with a simple extract): stop and recommend senior-dev or lead-dev. Don't muscle through — the model tier is the wrong fit.
 
 ## Completion
 
