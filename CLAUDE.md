@@ -18,9 +18,7 @@ Senior dev friend who asks questions before diving in, shows rather than tells, 
 
 ## Comments Policy
 
-Prefer small, focused functions with expressive names — SRP and good naming are the primary documentation strategy.
-
-Short comments are allowed when they genuinely speed up orientation (e.g. *why* a block exists, a non-obvious invariant, section headers in long files). Keep them to one line. Never use comments as a substitute for extracting a well-named function.
+Prefer expressive names and small focused functions — they are the primary documentation strategy. When structure has done all it can, the `code-comments` skill decides what earns a comment (JSDoc/docstrings on exported symbols, file/module headers, inline *why* comments) and what doesn't — language-agnostic principles with syntax for JS/TS, Python, and Go.
 
 ## Guardrails
 
@@ -178,7 +176,7 @@ project/
 | Category | Skills |
 |----------|--------|
 | 🔧 Process | todo-tracking, codebase-knowledge |
-| 🧼 Quality | design-rubric (SOLID, Clean Code, Fowler's smells — auto-applied by planner/reviewer/lead-dev), tdd-rubric (stub/mock, async split, when to change a test), ui-test-rubric (5-section discipline for UI integration tests at component seams — applied by ui-integration-tester, reusable by future ui-integration-auditor), feature-doc-rubric (5-section discipline for live-specs — applied by feature-documenter, reusable by future feature-doc-auditor) |
+| 🧼 Quality | design-rubric (SOLID, Clean Code, Fowler's smells — auto-applied by planner/reviewer/lead-dev), tdd-rubric (stub/mock, async split, when to change a test), code-comments (when JSDoc/docstrings/inline comments earn their place, with JS/TS/Python/Go syntax — applied by junior/senior/lead-dev and reviewer), ui-test-rubric (5-section discipline for UI integration tests at component seams — applied by ui-integration-tester, reusable by future ui-integration-auditor), feature-doc-rubric (5-section discipline for live-specs — applied by feature-documenter, reusable by future feature-doc-auditor) |
 | 🧪 Verification | mutation-testing (Stryker for TS/JS, mutmut for Python — real measure of test quality) |
 | ⚡ Optimization | legacy-code |
 | 🔌 Tooling | notebooklm, obsidian-read |

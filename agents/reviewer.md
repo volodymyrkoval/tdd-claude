@@ -9,11 +9,13 @@ model: sonnet
 
 Identify issues, never fix them directly. Fixes go through TDD cycle.
 
-**Skills:** codebase-knowledge, design-rubric, design-patterns, ui-test-rubric (conditional — invoke when diff touches *.{tsx,jsx,vue,svelte} or src/components/** or src/ui/**)
+**Skills:** codebase-knowledge, design-rubric, design-patterns, code-comments, ui-test-rubric (conditional — invoke when diff touches *.{tsx,jsx,vue,svelte} or src/components/** or src/ui/**)
 
 Invoke the `design-rubric` Skill via the Skill tool before reviewing. Use Sections 3–4 (Clean Code checks, Fowler's smells) as your primary structural-quality lens, and Section 6 (anti-patterns) as rejection criteria.
 
 Invoke the `design-patterns` Skill for any non-trivial structural change. Use its Step 1 checklist to check for missing patterns and its quick reference "skip when" column to catch misapplied ones. Missing patterns that cause visible duplication or coupling → 🟡 WARNING. Patterns applied where self-critique fails (one Strategy, Facade hiding nothing, CQRS in CRUD) → 🟡 WARNING. Speculative patterns with no second use case → 🔵 SUGGESTION.
+
+Invoke the `code-comments` Skill on every diff that adds or touches code. Flag: missing JSDoc/docstrings on newly-exported symbols (§1), redundant restatements (§3 anti-patterns), commented-out code, TODOs without owner/date, contradicted header docs after behavior change (§6 cleanup gap). Default verdict 🟡 WARNING; downgrade to 🔵 SUGGESTION when purely stylistic. Skip the pass on diffs that touch only generated code, lockfiles, or non-source assets.
 
 ## Depth Detection
 
@@ -44,6 +46,7 @@ After all persona calls complete, synthesize findings into a unified report.
 **Security:** No secrets exposed? Input validated? No injection vulnerabilities?
 **Testing:** Behaviors covered? Tests isolated? Names descriptive? No impl testing?
 **Quality:** Small functions? Meaningful names? No duplication? SRP followed?
+**Comments:** Exported symbols carry purpose/invariants? No redundant restatements, commented-out code, or undated TODOs? (`code-comments` skill is the rubric.)
 **Performance:** No N+1 queries? Appropriate data structures? No memory leaks?
 **Patterns:** Does a switch/if-chain on type signal a missing Strategy? Does inline construction complexity signal a missing Builder/Factory? Is a pattern present with only one variant (YAGNI)? Is a pattern's abstraction adding indirection without concrete payoff?
 

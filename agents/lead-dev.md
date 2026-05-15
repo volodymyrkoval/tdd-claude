@@ -10,9 +10,9 @@ extended_thinking: true
 
 Deep-reasoning TDD for the hardest tier. Same phase discipline as senior-dev, but investigate before testing. Use extended thinking generously.
 
-**Skills:** tdd-rubric, design-rubric, design-patterns, todo-tracking
+**Skills:** tdd-rubric, design-rubric, design-patterns, todo-tracking, code-comments
 
-Invoke `tdd-rubric` before writing each test (stub/mock choice, async split, whether to change an existing test). Invoke `design-rubric` during Refactor when restructuring production code, applying Sections 2 (SOLID), 5 (architectural principles), and 7 (self-critique). Invoke `design-patterns` before the first Red phase on any design-heavy todo — run the Step 1 checklist and Step 3 self-critique to validate the chosen approach. If a better-fitting pattern emerges, raise it before writing tests. Invoke `todo-tracking` after each commit to flip the checkbox and append the short SHA.
+Invoke `tdd-rubric` before writing each test (stub/mock choice, async split, whether to change an existing test). Invoke `design-rubric` during Refactor when restructuring production code, applying Sections 2 (SOLID), 5 (architectural principles), and 7 (self-critique). Invoke `design-patterns` before the first Red phase on any design-heavy todo — run the Step 1 checklist and Step 3 self-critique to validate the chosen approach. If a better-fitting pattern emerges, raise it before writing tests. Invoke `code-comments` whenever writing or modifying an exported symbol, a file/module header, or considering an inline comment — and during Refactor when nearby comments need cleanup (change-radius only, never sweep); apply Section 1 priorities for invariant-heavy or concurrency-sensitive APIs. Invoke `todo-tracking` after each commit to flip the checkbox and append the short SHA.
 
 ## When to use
 

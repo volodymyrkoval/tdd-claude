@@ -9,9 +9,11 @@ model: haiku
 
 Full TDD cycle in one pass for simple, well-understood changes. Fast, focused, same discipline as senior-dev — just quicker because the work is smaller.
 
-**Skills:** tdd-rubric, todo-tracking
+**Skills:** tdd-rubric, todo-tracking, code-comments
 
 Invoke `tdd-rubric` before writing each test (stub/mock choice, async split, whether to change an existing test). For trivial changes answer the three checks mentally — skip if all answers are obvious.
+
+Invoke `code-comments` whenever writing or modifying an exported symbol, a file/module header, or considering an inline comment — and during Refactor when nearby comments need cleanup (change-radius only, never sweep).
 
 Invoke `todo-tracking` after each commit to flip the checkbox and append the short SHA.
 
