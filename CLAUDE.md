@@ -114,7 +114,7 @@ project/
 | 🔵 TDD | `/implement` (dispatches next tier group; todos are the verification unit within it), `/refactor`, `/commit` |
 | 🔍 Investigate | `/diagnose <symptom>` (→ debugger) |
 | ✅ Finish | `/review`, `/design-audit`, `/security-audit`, `/mutate`, `/docs`, `/spec` (live-spec right after `/done`) |
-| 🔧 Util | `/sync`, `/readme`, `/expert` (→ project-expert) |
+| 🔧 Util | `/sync`, `/readme`, `/expert` (→ project-expert), `/audit-comments <scope>` (sweep `code-comments` skill across existing code; `--plan` for large `full` sweeps) |
 
 ## Agents
 
@@ -160,6 +160,7 @@ project/
 | "update README / CLAUDE.md / feature docs" | **docs-writer** agent via `/readme` `/sync` `/docs` | Doc-vs-code drift audit first, then targeted updates. |
 | "document the feature we just shipped" / "live-spec" / "what does this iteration mean?" | **feature-documenter** via `/spec` | Runs after `/done`. Sources from the latest `dev/done-NNN` and its archived plan. Auto-runs a drift sweep across `CLAUDE.md`, `README.md`, `docs/features/**`, and other top-level docs — patches anything the new feature contradicted in the same commit. |
 | "scaffold / bootstrap a new project" | **bootstrapper** via `/bootstrap` | Use `--retrofit` for existing projects — adds missing quality tooling (Stryker/mutmut, dependency-cruiser/import-linter, `.claude/test-cmd`) without touching source or committing. |
+| "audit / fix / sweep code comments / docstrings / JSDoc" across existing code | `/audit-comments <scope>` (→ junior/senior-dev) | Always require an explicit scope (`full`, `paths:<glob>`, or bare path). For `full` >50 files, the command refuses without `--plan` (recommended) or `--force`. Per-file commits, behavior unchanged. Distinct from the change-radius cleanup dev agents already do during normal TDD. |
 
 ### Orchestrator rules
 
