@@ -34,7 +34,8 @@ Fast planning for Simple tasks. Writes a concise plan with todos. Escalates imme
   - Format: `- [ ] A<N>: <todo> — <S|M|L>, <junior-dev|senior-dev|lead-dev>`
   - **Tier assignment process — do this for every todo:**
     1. Try to write a self-contained prescription: target file, function/class name, signature or data shape, key algorithmic decision. If you can write it → tag `junior-dev`. This is the threshold test, not a post-hoc label.
-    2. Only tag `senior-dev` when a design question genuinely cannot be answered at planning time. If you caught yourself writing a vague todo and then tagging it senior-dev, rewrite the todo with the answer and tag it junior-dev instead.
+    2. **Orchestrate, don't conflate.** If the prescription reads as `do A, then B, then C, then D`, rewrite it as an orchestrator with named helpers and list them in the prescription. One thing at one level of abstraction per method. Helpers and orchestrator both stay `junior-dev`.
+    3. Only tag `senior-dev` when a design question genuinely cannot be answered at planning time. If you caught yourself writing a vague todo and then tagging it senior-dev, rewrite the todo with the answer and tag it junior-dev instead.
 - **Overall effort summary:** Total S/M/L counts
 
 No design sections. No component tables. No data flow. No multi-perspective.

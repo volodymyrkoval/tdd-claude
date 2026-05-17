@@ -135,7 +135,8 @@ Scale by complexity — Simple plans may skip design sections.
   **Tier assignment process — do this for every todo:**
   1. Check every section of the plan — Interfaces, Components, Data Flow, Error Handling, Technical Notes — before assigning a tier. If the todo implements something whose signature, file location, algorithm, data shape, or error contract is already decided anywhere in the plan, copy that spec into the todo description. A todo whose design is already answered in the plan is `junior-dev` by definition — the design question is closed.
   2. For anything not already decided: try to write a self-contained prescription (target file, function/class name, signature, key decision). If you can write it → tag `junior-dev`. This is the threshold test, not a post-hoc label.
-  3. Only tag `senior-dev` when a design question genuinely cannot be answered at planning time — runtime behaviour unknown, cross-cutting tradeoff, implicit requirement still open.
+  3. **Orchestrate, don't conflate.** Read the prescription back as prose. If it reads as `do A, then B, then C, then D` — or you'd describe it with "and"/"then"/"also" between verbs — the prescription is a god-method waiting to happen. Rewrite it as an orchestrator that calls named helpers (e.g. `processOrder(input)` orchestrates `validate(input)` → `price(...)` → `persist(...)` → `notify(...)`) and list the helpers in the prescription. The dev agent then implements decomposed code from the start, not after a refactor pass. Helpers and orchestrator both stay `junior-dev` — decomposition is mechanical, not design-shaping. This is the same `one thing at one level of abstraction` rule that `design-rubric` §3 applies at code-review time, pulled forward into planning.
+  4. Only tag `senior-dev` when a design question genuinely cannot be answered at planning time — runtime behaviour unknown, cross-cutting tradeoff, implicit requirement still open.
   Senior-dev is not a safe default for "somewhat complex." If you wrote a vague todo and then tagged it senior-dev, check whether the answer is already in the Interfaces or Components section — if so, copy it in and tag junior-dev instead.
 - **Overall effort summary:** Total S/M/L counts and which tiers dominate
 
@@ -151,7 +152,7 @@ Scale by complexity — Simple plans may skip design sections.
 - **Perspective synthesis:** Consensus, tensions, critical concerns
 
 ## Principles (apply pragmatically)
-- SRP: One reason to change per component
+- SRP: one reason to change per component; one thing at one level of abstraction per method
 - Design for testability: Injectable deps, isolatable side effects
 - Patterns when natural, never forced
 
