@@ -35,15 +35,17 @@ Parse into three slots (flags may appear in any order):
 **Chaining:**
 - `--plan` → after audit, if verdict is ❌ REWORK, dispatch **planner** with the unified audit file as input
 
-## Thresholds (reminder — agent enforces these)
+## Reasoning lens (reminder — agent applies these)
 
-| Unit | Warn | FAIL |
-|------|------|------|
-| Method LOC | >20 | >40 |
-| Class LOC | >200 | >400 |
-| File LOC | >300 | >500 |
-| Nesting depth | — | >2 |
-| Parameters | — | >3 |
+Size is the symptom; the principle is the violation the agent reports.
+
+- **Method**: one thing at one level of abstraction. If a chunk can be extracted with a meaningful name, it was doing more than one thing.
+- **Class**: describable in one sentence without "and"/"or". Multiple reasons-to-change = SRP.
+- **File**: one public class default; unrelated types in one file = split.
+- **Nesting**: past ~2 levels the reader's mental stack overflows.
+- **Parameters**: each is a coupling point; Data Clumps → Parameter Object; flag args → split the function.
+
+See `design-rubric` §3 for the full reasoning per unit.
 
 ## Dispatch
 

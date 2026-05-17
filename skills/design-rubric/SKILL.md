@@ -39,20 +39,23 @@ Apply to every non-trivial component in the design.
 
 ## 3. Clean Code (Uncle Bob) — concrete checks
 
-**Size & complexity thresholds**
+**Size & complexity — reason from principles, not line counts**
 
-LOC counts exclude blank lines and pure comment lines, but include braces and signatures.
+Length is a symptom. Cohesion, single responsibility, and one-level-of-abstraction are the diseases. Ask which principle a too-big unit is breaking; don't gate on LOC.
 
-| Unit | Warn | **FAIL** |
-|------|------|----------|
-| Method / function LOC | >20 | **>40** |
-| Class LOC | >200 | **>400** |
-| File LOC | >300 | **>500** |
-| Nesting depth inside a function | — | **>2** |
-| Function parameters | — | **>3** (use parameter object) |
-| Cyclomatic complexity (branches per function) | >5 | **>8** |
+- **Methods / functions** — Uncle Bob: "small, then smaller." A method does **one thing at one level of abstraction**. Diagnostic: can you extract a chunk and give it a meaningful name? Then it was doing more than one thing. Fowler's working heuristic: if it doesn't fit on screen without scrolling, your working memory is already fragmented reading it. Most clean code lives around 5–15 lines; past ~40 is almost always two functions in a trench coat.
 
-Warn = justify or refactor. FAIL = non-negotiable, refactor before merging.
+- **Classes** — length is the wrong question. The right one: describe the class's responsibility in one sentence **without "and" or "or."** Can't? Split. Cohesion test: do most methods use most fields, or do you see method clusters using disjoint field clusters? Disjoint = two classes pretending to be one (LCOM smell). Reason-to-change test: list every reason this class would change; more than one = SRP violation. A class hitting several hundred LOC almost always means SRP is broken — but treat the SRP failure as the bug, not the line count.
+
+- **Files** — follow class size. Default: one public class per file. Acceptable exceptions: tightly coupled types — sealed hierarchies, value object families, internal helpers used only by the file's main class. Multiple unrelated types in one file → split.
+
+- **Nesting depth** — each level is an obscured decision the reader must hold in working memory. Past ~2 levels the mental stack overflows. Cure is structural: **Guard clauses** for input validation, **Extract Method** to give a chunk a name and a single return value, **Replace Conditional with Polymorphism** when the nesting follows a runtime type discriminator.
+
+- **Function parameters** — each parameter is a coupling point. Uncle Bob: "ideal is zero, three is a lot." Two specific smells: **Data Clumps** (parameters that always travel together → Parameter Object) and **flag arguments** (hidden if-statements → split the function).
+
+- **Cyclomatic complexity** — each branch multiplies the test surface and the cognitive load. High CC is the math behind why **Long Method** is a smell. Same refactorings: Extract Method, Replace Conditional with Polymorphism (only when the type varies at runtime — otherwise you're trading branches for class explosion).
+
+The diagnostic question for all of these is the same: **what principle is the size violating?** Fix the cause; length normalizes downstream.
 
 **Functions**
 - Do one thing at one level of abstraction
