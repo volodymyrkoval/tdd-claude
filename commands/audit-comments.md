@@ -63,7 +63,7 @@ Stop. Do not dispatch.
 
 Dispatch **planner** with:
 
-> Audit code comments in `<scope>` per the `code-comments` skill. Resolved files: `<file list>`. Each file is one todo, effort `S`, tier `<resolved-tier>-dev`. Group todos by top-level source directory under sections, but commit per file. Each todo must: invoke `code-comments`, fix violations (§1 missing docs on exports, §3 inline-comment misuse, §5 anti-patterns, §6 nearby debt), commit `docs(comments): <relative-path>`. **Comments only — no signature, behavior, or refactor changes.** No new tests required.
+> Audit code comments in `<scope>` per the `code-comments` skill. Resolved files: `<file list>`. Each file is one todo, effort `S`, tier `<resolved-tier>-dev`. Group todos by top-level source directory under sections, but commit per file. Each todo must: invoke `code-comments`, fix violations (§1 missing docs on **exported functions AND classes/structs/types** — never skip a class for being self-named, §3 inline-comment misuse, §5 anti-patterns, §6 nearby debt), commit `docs(comments): <relative-path>`. **Comments only — no signature, behavior, or refactor changes.** No new tests required.
 
 Planner writes the plan to `docs/plans/`. After it returns, tell the user:
 > Plan written. Run `/implement` to execute.
@@ -85,8 +85,11 @@ Files (process each in order):
 For each file:
   1. Read it.
   2. Invoke the `code-comments` skill.
-  3. Apply §1 (docstrings on exports), §3 (inline comments earn place),
-     §5 (no anti-patterns), §6 (cleanup nearby debt).
+  3. Apply §1 (docstrings on exports — **functions AND classes/structs/
+     types**; never skip a class because its name is descriptive,
+     class docs carry purpose + invariants + lifecycle the name can't),
+     §3 (inline comments earn place), §5 (no anti-patterns),
+     §6 (cleanup nearby debt).
   4. If changes are needed: edit, then commit
      `docs(comments): <relative-path>`.
   5. If already clean: skip, no commit.

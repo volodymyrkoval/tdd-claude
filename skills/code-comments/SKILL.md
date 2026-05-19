@@ -15,16 +15,29 @@ Comments earn their place by carrying context the code cannot. Types, names, and
 
 ## 1. JSDoc / docstrings on exported symbols
 
-**Add when:** the symbol is exported, public on a class, or imported by name elsewhere.
-**Skip when:** the function is internal and its name + types fully describe it, or the signature is trivially self-evident (`isEmpty(x): boolean`).
+Covers **functions, classes, types, enums, and exported constants** — anything callers import or instantiate.
 
-**Include, in priority order:**
+**Add when:** the symbol is exported, public on a class, or imported by name elsewhere.
+**Skip when:** the symbol is internal (not exported) and its name + types fully describe it, or the signature is trivially self-evident (`isEmpty(x): boolean`).
+**Never skip a class** even when its name is descriptive. The class name says *what kind of thing*; the docblock says *what it's for and how it's used* — a 1–2 sentence purpose statement saves callers from reading methods to understand intent.
+
+### For functions, include in priority order
 
 1. **Purpose.** One sentence on what it is *for*, not what it mechanically does. "Resolves the effective billing tier from subscription, overrides, and feature flags" beats "Returns the billing tier."
 2. **Invariants / preconditions.** What the caller must guarantee. "Assumes `userId` has been validated against the session."
 3. **Domain semantics types can't capture.** Units, ranges, nullability rules. "`amount` is in minor units (cents)."
 4. **Non-obvious side effects or failure modes.** "Logs to Sentry on retry exhaustion; does not throw."
 5. **Cross-cutting constraints.** Latency budgets, ordering guarantees, callers that matter.
+
+### For classes, include in priority order
+
+1. **Purpose.** What this class *represents* or *coordinates*. "Caches resolved feature-flag values for the lifetime of a single HTTP request."
+2. **Invariants the instance maintains.** What is always true once the instance exists. "Once `start()` is called, the connection is reused until `close()` — never reconnect manually."
+3. **Lifecycle and ownership.** Who creates instances, who owns them, when they're disposed. "Constructed by the DI container at request scope; do not instantiate manually."
+4. **Threading / concurrency.** "Not thread-safe; use one instance per worker."
+5. **Extension points.** If designed to be subclassed or extended, name how. Skip when the class is final/sealed.
+
+Methods on an exported class: document **public** methods whose contract isn't already covered by the class doc. `RequestFlagCache.resolve(key)` doesn't need a docblock if the class doc already explains caching semantics; document it when the method has invariants or failure modes the class doc doesn't capture.
 
 **Never:** redundantly document types the signature already shows. `@param {string} userId - The user ID` is pure noise.
 
@@ -112,6 +125,7 @@ The principles above are language-agnostic. The syntax differs.
 
 ### TypeScript / JavaScript — JSDoc
 
+**Function:**
 ```ts
 /**
  * Resolves the effective billing tier from subscription, overrides, and feature flags.
@@ -124,12 +138,27 @@ The principles above are language-agnostic. The syntax differs.
 export function resolveBillingTier(userId: UserId): Tier | null { ... }
 ```
 
+**Class:**
+```ts
+/**
+ * Caches resolved feature-flag values for the lifetime of a single HTTP request.
+ *
+ * Once `resolve()` returns a value for a key, the same value is returned for that
+ * key for the rest of the request — flag flips mid-request are not observed.
+ * Not safe to share across requests.
+ *
+ * Constructed by the DI container at request scope; do not instantiate manually.
+ */
+export class RequestFlagCache { ... }
+```
+
 - In **TypeScript**, skip `@param`/`@returns` *types* — the signature carries them. Use `@param`/`@returns` *prose* only when adding semantics the type can't.
 - In **plain JS**, type tags (`@param {string}`) are useful documentation; keep the prose anyway.
 - Place JSDoc directly above the symbol, no blank line between.
 
 ### Python — docstrings
 
+**Function:**
 ```python
 def resolve_billing_tier(user_id: UserId) -> Tier | None:
     """Resolve the effective billing tier from subscription, overrides, and feature flags.
@@ -142,12 +171,28 @@ def resolve_billing_tier(user_id: UserId) -> Tier | None:
     """
 ```
 
+**Class:**
+```python
+class RequestFlagCache:
+    """Cache resolved feature-flag values for the lifetime of one HTTP request.
+
+    Once :meth:`resolve` returns a value for a key, the same value is returned
+    for that key for the rest of the request — flag flips mid-request are not
+    observed. Not safe to share across requests.
+
+    Constructed by the DI container at request scope; do not instantiate
+    manually.
+    """
+```
+
 - Pick one style per project (Google, NumPy, or reST) and stay consistent.
 - Don't list `Args:` if every entry would just echo the type and name. Include only the params that need semantics.
 - A module docstring at the top of the file (before any imports) replaces the file-header comment.
+- Class docstring sits directly under the `class` line, indented. `__init__` rarely needs its own docstring — the class docstring covers construction semantics.
 
 ### Go — godoc
 
+**Function:**
 ```go
 // ResolveBillingTier returns the effective billing tier from subscription,
 // overrides, and feature flags.
@@ -159,7 +204,19 @@ def resolve_billing_tier(user_id: UserId) -> Tier | None:
 func ResolveBillingTier(userID UserID) Tier { ... }
 ```
 
-- Sentence starts with the symbol name — godoc convention.
+**Struct (Go's class-equivalent):**
+```go
+// RequestFlagCache caches resolved feature-flag values for the lifetime of
+// a single HTTP request.
+//
+// Once Resolve returns a value for a key, the same value is returned for
+// that key for the rest of the request — flag flips mid-request are not
+// observed. RequestFlagCache is not safe for concurrent use by multiple
+// goroutines outside the request that owns it.
+type RequestFlagCache struct { ... }
+```
+
+- Sentence starts with the symbol name — godoc convention applies to functions, structs, interfaces, types, and consts.
 - Package-level doc: a `// Package foo …` comment on the file containing `package foo` (or a dedicated `doc.go`).
 - No `@`-tag styles — Go has no JSDoc/docstring section convention.
 
