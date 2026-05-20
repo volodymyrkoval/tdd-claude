@@ -20,6 +20,7 @@ If a conflict arises between rules, the **Tie-Breakers** section wins.
 | Composition vs inheritance | **Composition** | Inherit only when LSP genuinely holds and you need subtype polymorphism. |
 | Explicit vs clever | **Explicit** | Read 10×, write 1×. Clever loses. |
 | Abstraction vs duplication | Abstract only if it **removes more complexity than it adds** | A wrong abstraction is costlier than duplication. |
+| Decomposition vs readability | **Readability** | Split for responsibilities, never to hit a line count. Five fragments you must chase across a file read worse than one cohesive method that flows top-to-bottom. |
 | Consistency vs correctness | **Correctness** | Don't propagate a bad pattern for symmetry. Fix the pattern. |
 | Correctness vs performance | **Correctness** | Measure before optimizing. A fast wrong answer is still wrong. |
 
@@ -43,7 +44,7 @@ Apply to every non-trivial component in the design.
 
 Length is a symptom. Cohesion, single responsibility, and one-level-of-abstraction are the diseases. Ask which principle a too-big unit is breaking; don't gate on LOC.
 
-- **Methods / functions** — Uncle Bob: "small, then smaller." A method does **one thing at one level of abstraction**. Diagnostic: can you extract a chunk and give it a meaningful name? Then it was doing more than one thing. Fowler's working heuristic: if it doesn't fit on screen without scrolling, your working memory is already fragmented reading it. Most clean code lives around 5–15 lines; past ~40 is almost always two functions in a trench coat.
+- **Methods / functions** — Uncle Bob: "small, then smaller." A method does **one thing at one level of abstraction**. Diagnostic: can you extract a chunk and give it a meaningful name *that pulls its weight*? Then it was doing more than one thing. Fowler's working heuristic: if it doesn't fit on screen without scrolling, your working memory is already fragmented reading it. Line counts are orientation, not a gate — a long method that does one thing and reads cleanly top-to-bottom is fine; a short one interleaving three concerns is not. The opposite mistake is just as real: shredding a cohesive sequence into a scatter of single-use helpers you must chase across the file hurts readability more than length ever did. Extract for a distinct responsibility, never to hit a number.
 
 - **Classes** — length is the wrong question. The right one: describe the class's responsibility in one sentence **without "and" or "or."** Can't? Split. Cohesion test: do most methods use most fields, or do you see method clusters using disjoint field clusters? Disjoint = two classes pretending to be one (LCOM smell). Reason-to-change test: list every reason this class would change; more than one = SRP violation. A class hitting several hundred LOC almost always means SRP is broken — but treat the SRP failure as the bug, not the line count.
 

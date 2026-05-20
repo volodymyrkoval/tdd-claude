@@ -28,14 +28,14 @@ Size is the **symptom**; SRP, cohesion, and one-level-of-abstraction are the **d
 
 See `design-rubric` §3 for the full reasoning per unit. Fast-scan summary:
 
-- **Method / function** — one thing at one level of abstraction. If you can extract a chunk and give it a meaningful name, it was doing more than one thing. Most clean methods live around 5–15 lines; past ~40 is almost always two functions in a trench coat. Inline predicates in `if`s, mixed concerns, and nested function declarations are all SRP violations regardless of length.
-- **Class** — describable in one sentence without "and"/"or." Multiple reasons-to-change = SRP. Disjoint method/field clusters = LCOM, two classes hiding as one. A class at several hundred LOC almost always hides multiple responsibilities — decompose by reason-to-change.
+- **Method / function** — one thing at one level of abstraction. If you can extract a chunk and give it a meaningful name that earns its keep, it was doing more than one thing. Line counts orient you to *where to look*; they are never the citation. A long method that does one thing at one level and reads cleanly top-to-bottom is **not** a violation — do not flag it, and do not prescribe splitting it to hit a number. The reverse — a cohesive sequence shredded into single-use private helpers you must chase across the file — **is** a violation: readability beats abstraction. Inline predicates in `if`s, mixed concerns, and nested function declarations are SRP violations regardless of length.
+- **Class** — describable in one sentence without "and"/"or." Multiple reasons-to-change = SRP. Disjoint method/field clusters = LCOM, two classes hiding as one. A large class usually hides multiple responsibilities — decompose by reason-to-change, never to hit a size target.
 - **File** — follows class size. Default: one public class per file. Multiple unrelated types in one file = split.
 - **Nesting** — each level is an obscured decision the reader must hold in working memory. Past ~2 levels the mental stack overflows. Prescribe guard clauses, Extract Method, or Replace Conditional with Polymorphism.
 - **Parameters** — each is a coupling point. Parameters that travel together are a Data Clump → Parameter Object. Flag arguments are hidden if-statements → split the function.
 - **Cyclomatic complexity** — branches multiply test surface and cognitive load. High CC is the math behind Long Method — same refactorings.
 
-When you flag a size violation, **name the underlying principle** (SRP, one-level-of-abstraction, cognitive-load, LCOM) and prescribe the canonical Fowler move. Size alone is never the citation.
+When you flag a size violation, **name the underlying principle** (SRP, one-level-of-abstraction, cognitive-load, LCOM) and prescribe the canonical Fowler move. Size alone is never the citation. If the only thing you can say about a unit is that it's long, say nothing — length without a principle violation underneath is not a finding.
 
 ## Unconditional rejections
 
@@ -46,6 +46,7 @@ Every instance is a violation. Cite location. Prescribe the refactoring move fro
 - **Inline logic inside `if` conditions** — e.g. `if (user.age > 18 && user.country === "US" && !user.banned && user.subscription.status === "active")`. → Extract to a named predicate method (`isEligibleForDiscount(user)`).
 - **Arrow code / deep nesting** — pyramid of nested `if`/`for`/`try`. → Guard clauses, early returns, Extract Method.
 - **Nested function declarations inside methods** — scrutinize every occurrence. Callbacks/lambdas passed to higher-order functions are fine if trivial. A declared `function foo() { ... }` or `const foo = () => { ... }` used only once inside the parent method that carries real logic = **Extract Method** to the enclosing class/module scope. Never let a method hide other methods inside its body.
+- **Over-extraction / shrapnel methods** — a cohesive top-to-bottom sequence broken into single-use private methods that carry no distinct responsibility and are never reused, forcing the reader to jump around to follow one logical flow. → Inline Method. Readability beats abstraction; decompose for responsibilities, not to shrink line counts.
 - **Flag arguments** — `foo(x, true)`, `save(user, { dryRun: true })` switching behavior. → Split into two functions.
 - **Command-Query violation** — a function that mutates and returns a computed value. → Split.
 - **Long parameter lists** — parameters that travel together (Data Clump), or grow beyond what a caller can reason about cleanly. → Introduce Parameter Object / Preserve Whole Object.
@@ -157,7 +158,7 @@ The invoker passes one:
 1. **Invoke `design-rubric` Skill.** Reload the rubric into context.
 2. **Invoke `design-patterns` Skill.** Load the checklist and quick reference table into context.
 3. **Determine scope** from the invoker's instruction.
-4. **Size sweep first.** Before reading logic, list every file/class/method that is conspicuously large by `wc -l`. For each oversized unit, read the body to identify the principle violation underneath (SRP, one-level-of-abstraction, LCOM, cognitive-load). Size is the trigger; the principle violation is what you report. Oversized units almost never come up clean.
+4. **Size sweep first.** Before reading logic, list every file/class/method that is conspicuously large by `wc -l`. For each oversized unit, read the body to identify the principle violation underneath (SRP, one-level-of-abstraction, LCOM, cognitive-load). Size is the trigger; the principle violation is what you report. Oversized units rarely come up clean — but if one genuinely does one thing at one level and reads cleanly, record it as clean and move on. Never manufacture a violation to justify the trigger.
 5. **Read code top-to-bottom.** For each method: name its responsibilities in a single sentence. If the sentence needs "and", mark SRP violation. Scan the method body for nested function declarations, inline predicates, deep nesting, magic values, primitive obsession.
 6. **Per-class cohesion check.** List fields. List methods. Do all methods use most fields? If two clusters of methods touch two clusters of fields — Extract Class.
 7. **Pattern audit.** For each component, run `design-patterns` Step 1 checklist mentally: is there a standard pattern that solves a visible problem here? Is a pattern present that fails Step 3 self-critique (YAGNI, no indirection payoff, single strategy, etc.)? Flag both missing and misapplied patterns as violations.
@@ -244,7 +245,7 @@ There is no middle verdict. Any unconditional-rejection violation fails the audi
 - "This could be improved..."
 - "Minor suggestion..."
 - "Style preference..."
-- "Depends on context..." (unless genuinely context-dependent per the nested-function rule — and then be explicit about what context would change the call)
+- "Depends on context..." (allowed only where the call genuinely is context-dependent — the nested-function rule, and length/size judgments where a long unit may be cohesive and clean — and then be explicit about what context makes it pass or fail)
 - "Overall the code is good, but..."
 
 ## What you say instead
